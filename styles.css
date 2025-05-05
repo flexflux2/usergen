@@ -1,71 +1,131 @@
 :root {
   --bg: #121212;
   --fg: #e0e0e0;
-  --primary: #4caf50;
-  --header-bg: #1f1f1f;
+  --card-bg: #1f1f1f;
   --row-alt-bg: #1a1a1a;
+  --primary: #4caf50;
   --radius: 8px;
   --padding: 12px;
 }
-
 [data-theme="dark"] {
   --bg: #121212; --fg: #e0e0e0;
+  --card-bg: #1f1f1f; --row-alt-bg: #1a1a1a;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  margin: 0; font-family: 'Segoe UI', sans-serif;
-  background: var(--bg); color: var(--fg);
-  display: grid; place-items: center;
-  min-height: 100vh; padding: 2rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Segoe UI', sans-serif;
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
 }
 
-.container { width: 100%; max-width: 1200px; }
+.container {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  width: 100%; max-width: 1100px;
+}
 
-h1 { text-align: center; margin-bottom: 1rem; }
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
 
 .controls {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .btn {
-  padding: 0.6rem 1.2rem; background: var(--primary);
-  color: #fff; border: none; border-radius: var(--radius);
-  cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: background 0.3s;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
 }
 .btn:hover { background: #45a049; }
+.btn:active { transform: scale(0.97); }
 
-.toggle { display: flex; align-items: center; cursor: pointer; }
+.toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
 .toggle input { display: none; }
+
 .slider {
-  width: 40px; height: 20px; background: #444;
-  border-radius: 20px; position: relative; margin-right: 8px;
+  width: 40px; height: 20px;
+  background: #444;
+  border-radius: 20px;
+  position: relative;
+  margin-right: 8px;
   transition: background 0.3s;
 }
 .slider::before {
-  content: ''; position: absolute; width: 18px; height: 18px;
-  background: #fff; border-radius: 50%; top: 1px; left: 1px;
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  top: 1px; left: 1px;
   transition: transform 0.3s;
 }
-input:checked + .slider { background: var(--primary); }
-input:checked + .slider::before { transform: translateX(20px); }
+input:checked + .slider {
+  background: var(--primary);
+}
+input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+}
 
 .data-table {
-  width: 100%; border-collapse: collapse;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  border-radius: var(--radius); overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
   margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
-.data-table th, .data-table td {
-  padding: var(--padding); text-align: left;
-}
-.data-table thead { background: var(--header-bg); }
-.data-table tbody tr:nth-child(odd) td { background: var(--row-alt-bg); }
+
+.data-table th,
 .data-table td {
-  cursor: pointer; transition: background 0.2s;
+  padding: var(--padding);
+  text-align: center;         /* center everything */
+  font-size: 0.95rem;
 }
-.data-table td:hover { background: #2a2a2a; }
+
+.data-table thead {
+  background: var(--card-bg);
+}
+
+.data-table tbody tr:nth-child(odd) td {
+  background: var(--row-alt-bg);
+}
+
+.data-table td {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.data-table td:hover {
+  background: #2a2a2a;
+}
+
 .data-table td.copied {
-  outline: 2px solid var(--primary); outline-offset: -2px;
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
 }
