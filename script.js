@@ -1,36 +1,37 @@
-const tableBody = document.getElementById('table-body');
+const tableBody   = document.getElementById('table-body');
 const generateBtn = document.getElementById('generate-btn');
-const toggle = document.getElementById('length-toggle');
-let lastCopied = null;
+const toggle      = document.getElementById('length-toggle');
+let lastCopied    = null;
 
+// Fetch 50 names in one go
 async function fetchUsers(count = 50) {
   const res = await fetch(`https://randomuser.me/api/?results=${count}&inc=name&nat=us`);
-  return (await res.json()).results;
+  const data = await res.json();
+  return data.results;  // each has .name.first & .name.last
 }
 
 function randomInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Mix of month-abbrev OR year
 function makeUsername(first, last) {
-  const useMonth = Math.random() < 0.5;
-  let suffix;
-  if (useMonth) {
-    const monthIndex = randomInRange(0, 11);
-    suffix = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' })
-      .format(new Date(Date.UTC(0, monthIndex, 1)));
+  if (Math.random() < 0.5) {
+    const month = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' })
+      .format(new Date(Date.UTC(2020, randomInRange(0,11), 1)));
+    return `${first}${last}${month}`.toLowerCase();
   } else {
-    suffix = randomInRange(1970, new Date().getFullYear());
+    return `${first}${last}${randomInRange(1970, new Date().getFullYear())}`.toLowerCase();
   }
-  return `${first}${last}${suffix}`.toLowerCase();
 }
 
+// Use toggle to decide length
 function generatePassword() {
   const length = toggle.checked ? randomInRange(14, 18) : 16;
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
-  const values = new Uint32Array(length);
-  window.crypto.getRandomValues(values);
-  return Array.from(values, v => charset[v % charset.length]).join('');
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
+  const rnds  = new Uint32Array(length);
+  window.crypto.getRandomValues(rnds);
+  return Array.from(rnds, r => chars[r % chars.length]).join('');
 }
 
 function clearTable() {
@@ -40,10 +41,12 @@ function clearTable() {
 function populateTable(users) {
   clearTable();
   users.forEach(u => {
-    const first = u.name.first, last = u.name.last;
-    const full = `${first} ${last}`;
+    const first    = u.name.first;
+    const last     = u.name.last;
+    const full     = `${first} ${last}`;
     const username = makeUsername(first, last);
     const password = generatePassword();
+
     const row = document.createElement('tr');
     [first, last, full, username, password].forEach(text => {
       const td = document.createElement('td');
@@ -65,9 +68,14 @@ async function generateAll() {
   populateTable(users);
 }
 
+// Initial load
 document.addEventListener('DOMContentLoaded', generateAll);
+
+// Regenerate on button click…
 generateBtn.addEventListener('click', generateAll);
+// …and immediately on toggle change
 toggle.addEventListener('change', () => {
-  document.querySelector('.toggle-label').textContent = 
+  document.querySelector('.toggle-label').textContent =
     toggle.checked ? 'Random 14–18 chars' : 'Use default 16-char password';
+  generateAll();
 });
