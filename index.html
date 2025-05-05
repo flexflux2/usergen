@@ -2,21 +2,23 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Random User Generator</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
   <div class="container">
     <h1>Random User Generator</h1>
+
     <div class="controls">
       <button id="generate-btn" class="btn">Regenerate All</button>
       <label class="toggle">
-        <input type="checkbox" id="length-toggle" />
+        <input type="checkbox" id="length-toggle"/>
         <span class="slider"></span>
         <span class="toggle-label">Use default 16-char password</span>
       </label>
     </div>
+
     <table class="data-table">
       <thead>
         <tr>
@@ -27,9 +29,12 @@
           <th>Password</th>
         </tr>
       </thead>
-      <tbody id="table-body"></tbody>
+      <tbody id="table-body">
+        <!-- 50 rows injected here -->
+      </tbody>
     </table>
   </div>
+
   <script src="script.js" defer></script>
 </body>
 </html>
