@@ -1,15 +1,14 @@
-const nameDiv = document.getElementById('name');
-const userDiv = document.getElementById('username');
-const passDiv = document.getElementById('password');
+const grid = document.querySelector('.grid-table');
 const btn = document.getElementById('generateBtn');
-const toggle = document.getElementById('lengthToggle');
-const toggleLabel = document.getElementById('toggleLabel');
+let lastCopiedCell = null;
 
-async function fetchRandomUser() {
-  const res = await fetch('https://randomuser.me/api/?inc=name&nat=us'); // only name fields :contentReference[oaicite:11]{index=11}
-  const data = await res.json();
-  const { first, last } = data.results[0].name;
-  return { first, last };
+async function fetchUsers(count = 50) {
+  const res = await fetch(`https://randomuser.me/api/?results=${count}&inc=name&nat=us`);
+  const { results } = await res.json();
+  return results.map(u => ({
+    first: u.name.first,
+    last: u.name.last
+  }));
 }
 
 function randomInRange(min, max) {
@@ -17,29 +16,47 @@ function randomInRange(min, max) {
 }
 
 function makeUsername(first, last) {
-  // pick a year between 1970–2023 or month 1–12
   const year = randomInRange(1970, new Date().getFullYear());
   return `${first}${last}${year}`.toLowerCase();
 }
 
-function generatePassword(length) {
+function generatePassword(length = 16) {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
   const values = new Uint32Array(length);
-  window.crypto.getRandomValues(values); // cryptographically strong :contentReference[oaicite:12]{index=12}
+  window.crypto.getRandomValues(values);
   return Array.from(values, v => charset[v % charset.length]).join('');
 }
 
-async function generateAll() {
-  const { first, last } = await fetchRandomUser();
-  nameDiv.textContent = `Name: ${first} ${last}`;
-  userDiv.textContent = `Username: ${makeUsername(first, last)}`;
-  const len = toggle.checked ? randomInRange(14, 18) : 16; // default 16, else 14–18 :contentReference[oaicite:13]{index=13}
-  passDiv.textContent = `Password (${len} chars): ${generatePassword(len)}`;
+function clearGrid() {
+  // Remove old cells (keep headers)
+  grid.querySelectorAll('.cell').forEach(el => el.remove());
 }
 
+function populateGrid(users) {
+  const cells = [];
+  users.forEach(({ first, last }) => {
+    cells.push(first, last, makeUsername(first, last), generatePassword(16));
+  });
+  cells.forEach(text => {
+    const div = document.createElement('div');
+    div.className = 'cell';
+    div.textContent = text;
+    div.addEventListener('click', () => {
+      navigator.clipboard.writeText(text);                   // copy to clipboard :contentReference[oaicite:14]{index=14}
+      if (lastCopiedCell) lastCopiedCell.classList.remove('copied'); // remove prev highlight :contentReference[oaicite:15]{index=15}
+      div.classList.add('copied');
+      lastCopiedCell = div;
+    });
+    grid.appendChild(div);
+  });
+}
+
+async function generateAll() {
+  const users = await fetchUsers();
+  clearGrid();
+  populateGrid(users);
+}
+
+// Initial load
+document.addEventListener('DOMContentLoaded', generateAll);
 btn.addEventListener('click', generateAll);
-toggle.addEventListener('change', () => {
-  toggleLabel.textContent = toggle.checked
-    ? 'Random length between 14–18'
-    : 'Use default 16-char password';
-});
