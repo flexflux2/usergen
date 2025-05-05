@@ -10,8 +10,28 @@ async function fetchUsers(count = 50) {
   return data.results;  // each has .name.first & .name.last
 }
 
+// Utility: inclusive random integer
 function randomInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Simplified month list
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/**
+ * Generate username as first+last + (either a month abbrev or a year between 1985–2005)
+ */
+function makeUsername(first, last) {
+  // 50/50 split
+  if (Math.random() < 0.5) {
+    // pick a month
+    const month = MONTHS[randomInRange(0, MONTHS.length - 1)];
+    return `${first}${last}${month}`.toLowerCase();
+  } else {
+    // pick a year between 1985 and 2005
+    const year = randomInRange(1985, 2005);
+    return `${first}${last}${year}`.toLowerCase();
+  }
 }
 
 // // Mix of month-abbrev OR year
@@ -25,23 +45,23 @@ function randomInRange(min, max) {
 //   }
 // }
 
-// Mix of month-abbrev OR year between 1985–2005
-function makeUsername(first, last) {
-  const useMonth = Math.random() < 0.5;
-  let suffix;
-  if (useMonth) {
-    // month path
-    const monthIdx = randomInRange(0, 11);
-    suffix = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      timeZone: 'UTC'
-    }).format(new Date(Date.UTC(2020, monthIdx, 1)));
-  } else {
-    // **year strictly between 1985–2005**
-    suffix = randomInRange(1985, 2005);
-  }
-  return `${first}${last}${suffix}`.toLowerCase();
-}
+// // Mix of month-abbrev OR year between 1985–2005
+// function makeUsername(first, last) {
+//   const useMonth = Math.random() < 0.5;
+//   let suffix;
+//   if (useMonth) {
+//     // month path
+//     const monthIdx = randomInRange(0, 11);
+//     suffix = new Intl.DateTimeFormat('en-US', {
+//       month: 'short',
+//       timeZone: 'UTC'
+//     }).format(new Date(Date.UTC(2020, monthIdx, 1)));
+//   } else {
+//     // **year strictly between 1985–2005**
+//     suffix = randomInRange(1985, 2005);
+//   }
+//   return `${first}${last}${suffix}`.toLowerCase();
+// }
 
 // Use toggle to decide length
 function generatePassword() {
