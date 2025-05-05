@@ -27,19 +27,20 @@ function randomInRange(min, max) {
 
 // Mix of month-abbrev OR year between 1985–2005
 function makeUsername(first, last) {
-  if (Math.random() < 0.5) {
-    // Month abbreviation path (unchanged)
-    const monthIndex = randomInRange(0, 11);
-    const month = new Intl.DateTimeFormat('en-US', {
+  const useMonth = Math.random() < 0.5;
+  let suffix;
+  if (useMonth) {
+    // month path
+    const monthIdx = randomInRange(0, 11);
+    suffix = new Intl.DateTimeFormat('en-US', {
       month: 'short',
       timeZone: 'UTC'
-    }).format(new Date(Date.UTC(0, monthIndex, 1)));
-    return `${first}${last}${month}`.toLowerCase();
+    }).format(new Date(Date.UTC(2020, monthIdx, 1)));
   } else {
-    // Year fixed between 1985 and 2005
-    const year = randomInRange(1985, 2005);
-    return `${first}${last}${year}`.toLowerCase();
+    // **year strictly between 1985–2005**
+    suffix = randomInRange(1985, 2005);
   }
+  return `${first}${last}${suffix}`.toLowerCase();
 }
 
 // Use toggle to decide length
