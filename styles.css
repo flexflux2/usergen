@@ -1,43 +1,81 @@
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 2rem;
-}
-button {
-  padding: 0.5rem 1rem;
-  margin: 1rem;
-  cursor: pointer;
+:root {
+  --bg: #f9f9f9;
+  --fg: #333;
+  --accent: #4CAF50;
+  --border-radius: 8px;
+  --cell-padding: 0.75rem;
 }
 
-/* Toggle switch styling */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  display: flex; justify-content: center; align-items: start;
+  min-height: 100vh; padding: 2rem;
 }
-.switch input { display: none; }
-.slider {
-  position: absolute; cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
+
+.container {
+  width: 100%; max-width: 1200px;
 }
-.slider:before {
-  position: absolute; content: "";
-  height: 26px; width: 26px;
-  left: 4px; bottom: 4px;
-  transition: .4s;
+
+h1 {
+  text-align: center; margin-bottom: 1rem;
 }
-input:checked + .slider {
-  background-color: #2196F3;
+
+button {
+  display: block; margin: 0 auto 1rem;
+  padding: 0.5rem 1rem; border: none;
+  background: var(--accent); color: #fff;
+  border-radius: var(--border-radius); cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-input:checked + .slider:before {
-  transform: translateX(26px);
+
+.grid-table {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
-.slider.round {
-  border-radius: 34px;
+
+.header, .cell {
+  padding: var(--cell-padding);
+  border-bottom: 1px solid #e0e0e0;
 }
-.slider.round:before {
-  border-radius: 50%;
+
+.header {
+  background: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.cell {
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.grid-table .cell:nth-child(n + 5):nth-child(4n + 1),
+.grid-table .cell:nth-child(n + 5):nth-child(4n + 2),
+.grid-table .cell:nth-child(n + 5):nth-child(4n + 3),
+.grid-table .cell:nth-child(n + 5):nth-child(4n + 4) {
+  /* Alternating row colors every 4 items per row */
+}
+.grid-table .cell:nth-child(4n+1):nth-child(4n+1) { /* First col */}
+/* Actually alternate using nth-of-type within rows */
+.grid-table .cell:nth-child(8n+5),
+.grid-table .cell:nth-child(8n+6),
+.grid-table .cell:nth-child(8n+7),
+.grid-table .cell:nth-child(8n+8) {
+  background: #f0f0f0;
+}
+
+.cell:hover {
+  background: #f5f5f5;
+}
+
+.cell.copied {
+  outline: 2px solid var(--accent);
 }
