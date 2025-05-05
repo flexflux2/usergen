@@ -14,14 +14,31 @@ function randomInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Mix of month-abbrev OR year
+// // Mix of month-abbrev OR year
+// function makeUsername(first, last) {
+//   if (Math.random() < 0.5) {
+//     const month = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' })
+//       .format(new Date(Date.UTC(2020, randomInRange(0,11), 1)));
+//     return `${first}${last}${month}`.toLowerCase();
+//   } else {
+//     return `${first}${last}${randomInRange(1970, new Date().getFullYear())}`.toLowerCase();
+//   }
+// }
+
+// Mix of month-abbrev OR year between 1985–2005
 function makeUsername(first, last) {
   if (Math.random() < 0.5) {
-    const month = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' })
-      .format(new Date(Date.UTC(2020, randomInRange(0,11), 1)));
+    // Month abbreviation path (unchanged)
+    const monthIndex = randomInRange(0, 11);
+    const month = new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      timeZone: 'UTC'
+    }).format(new Date(Date.UTC(0, monthIndex, 1)));
     return `${first}${last}${month}`.toLowerCase();
   } else {
-    return `${first}${last}${randomInRange(1970, new Date().getFullYear())}`.toLowerCase();
+    // Year fixed between 1985 and 2005
+    const year = randomInRange(1985, 2005);
+    return `${first}${last}${year}`.toLowerCase();
   }
 }
 
